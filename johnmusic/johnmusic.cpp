@@ -3,13 +3,33 @@
 #include <mmsystem.h>
 #include <string>
 #include <conio.h>
+#include <vector>
+#include <filesystem>
 
 #pragma comment (lib, "winmm.lib")
 
-std::string SONGS_DIR;
+std::string SONGS_DIR = "C:/Users/USER/OneDrive/Desktop/new-world/";
+std::vector<std::string> SONGS_LIST;
+
+void Set_SONGS_LIST() 
+{
+    std::filesystem::directory_iterator directoryScanner(SONGS_DIR);
+    for (auto& entry : directoryScanner) {
+        if (entry.is_regular_file()) {
+            std::string fname = entry.path().filename().string();
+            SONGS_LIST.push_back(fname);
+        }   
+    }
+}
 
 int main()
 {
+    Set_SONGS_LIST();
+
+    for (auto e : SONGS_LIST) {
+        std::cout << e << std::endl;
+    }
+    return 0;
     std::cout << "1\n";
     PlaySound(L"beans.wav", NULL, SND_FILENAME | SND_ASYNC);
 
