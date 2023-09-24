@@ -25,7 +25,7 @@ void Set_SONGS_LIST()
 
 void LogTutorial() 
 {
-    std::cout << "\nUsage:\np - toggle play/pause\nlist - list songs\nsel <index: int> - plays song from index\nkill/abort/exit - terminate\n\n";
+    std::cout << "\nUsage:\np - toggle play/pause\nlist - list songs\ns<index: int> - plays song from index\nkill/abort/exit - terminate\n\n";
 }
 
 void ListSongs() {
@@ -58,6 +58,20 @@ int main()
 
         if (cmd == "p") {
             std::cout << "Toggle pause/play\n";
+            IS_PLAYING = !IS_PLAYING;
+        }
+
+        if (cmd.rfind("s", 0) == 0) {
+            int songIndex = std::stoi(cmd.substr(1));
+            std::string songName = SONGS_LIST[songIndex];
+
+            std::string songPath = SONGS_DIR + songName;
+            std::wstring tmp = std::wstring(songPath.begin(), songPath.end());
+            LPCWSTR wideString = tmp.c_str();
+
+            std::cout << songName;
+
+            PlaySound(wideString, NULL, SND_FILENAME | SND_ASYNC);
         }
 
         std::cout << std::endl;
