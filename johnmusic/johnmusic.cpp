@@ -10,6 +10,7 @@
 
 std::string SONGS_DIR = "C:/Users/USER/OneDrive/Desktop/new-world/";
 std::vector<std::string> SONGS_LIST;
+bool IS_PLAYING = false;
 
 void Set_SONGS_LIST() 
 {
@@ -22,11 +23,47 @@ void Set_SONGS_LIST()
     }
 }
 
+void LogTutorial() 
+{
+    std::cout << "\nUsage:\np - toggle play/pause\nlist - list songs\nsel <index: int> - plays song from index\nkill/abort/exit - terminate\n\n";
+}
+
+void ListSongs() {
+    for (int i = 0; i < SONGS_LIST.size(); ++i) {
+        std::cout << i << " " << SONGS_LIST[i] << std::endl;
+    }
+}
+
 int main()
 {
     Set_SONGS_LIST();
 
-    for (auto e : SONGS_LIST) {
+    std::cout << "Loading songs from " << SONGS_DIR << std::endl;
+    std::cout << "Loaded " << SONGS_LIST.size() << " songs" << std::endl;
+
+    LogTutorial();
+
+    while (true) {
+        std::string cmd;
+        std::cin >> cmd;
+
+        if (cmd == "kill" || cmd == "abort" || cmd == "exit") {
+            std::cout << "Terminating...\n";
+            return 0;
+        }
+
+        if (cmd == "list") {
+            ListSongs();
+        }
+
+        if (cmd == "p") {
+            std::cout << "Toggle pause/play\n";
+        }
+
+        std::cout << std::endl;
+    }
+
+    for (auto& e : SONGS_LIST) {
         std::cout << e << std::endl;
     }
     return 0;
@@ -38,14 +75,3 @@ int main()
     std::string a;
     std::cin >> a;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
