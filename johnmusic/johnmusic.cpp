@@ -11,6 +11,8 @@
 std::string SONGS_DIR = "C:/Users/USER/OneDrive/Desktop/new-world/";
 std::vector<std::string> SONGS_LIST;
 bool IS_PLAYING = false;
+LPCWSTR CURRENT_SONG_PATH;
+int curentSongIndex = 0;
 
 void Set_SONGS_LIST() 
 {
@@ -25,7 +27,7 @@ void Set_SONGS_LIST()
 
 void LogTutorial() 
 {
-    std::cout << "\nUsage:\np - toggle play/pause\nlist - list songs\ns<index: int> - plays song from index\nkill/abort/exit - terminate\n\n";
+    std::cout << "\nUsage:\np - toggle play/pause\nlist - list songs\ns<index: int> - plays song from index\nkill/abort/exit - terminate\nhelp - launches an atomic bomb at your house\n\n";
 }
 
 void ListSongs() {
@@ -57,35 +59,41 @@ int main()
         }
 
         if (cmd == "p") {
-            std::cout << "Toggle pause/play\n";
             IS_PLAYING = !IS_PLAYING;
+
+            if (!IS_PLAYING) {
+                PlaySound(NULL, NULL, SND_ASYNC);
+            }
+            else {
+                std::string songName = SONGS_LIST[curentSongIndex];
+                std::string songPath = SONGS_DIR + songName;
+                std::wstring temp = std::wstring(songPath.begin(), songPath.end());
+                CURRENT_SONG_PATH = temp.c_str();
+                PlaySound(CURRENT_SONG_PATH, NULL, SND_FILENAME | SND_ASYNC);
+            }
+
         }
 
         if (cmd.rfind("s", 0) == 0) {
             int songIndex = std::stoi(cmd.substr(1));
+            curentSongIndex = songIndex;
             std::string songName = SONGS_LIST[songIndex];
-
             std::string songPath = SONGS_DIR + songName;
-            std::wstring tmp = std::wstring(songPath.begin(), songPath.end());
-            LPCWSTR wideString = tmp.c_str();
+            std::wstring temp = std::wstring(songPath.begin(), songPath.end());
+            CURRENT_SONG_PATH = temp.c_str();
 
-            std::cout << songName;
+            std::cout << songPath;
 
-            PlaySound(wideString, NULL, SND_FILENAME | SND_ASYNC);
+            PlaySound(CURRENT_SONG_PATH, NULL, SND_FILENAME | SND_ASYNC);
+            IS_PLAYING = true;
+        }
+
+        if (cmd == "help") {
+            LogTutorial();
         }
 
         std::cout << std::endl;
     }
 
-    for (auto& e : SONGS_LIST) {
-        std::cout << e << std::endl;
-    }
     return 0;
-    std::cout << "1\n";
-    PlaySound(L"beans.wav", NULL, SND_FILENAME | SND_ASYNC);
-
-    std::cout << "asdf\n";
-
-    std::string a;
-    std::cin >> a;
 }
